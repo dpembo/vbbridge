@@ -1,0 +1,17 @@
+name: VBBridge
+version: '1.0.0'
+main: uk.globeworks.vbbridge.VBBridgePlugin
+api-version: '1.21'
+author: dpembo
+description: Relays a backend command to VelocityBroadcast's /vb on the proxy.
+
+commands:
+  netbroadcast:
+    description: Broadcast a message network-wide via VelocityBroadcast
+    usage: /netbroadcast <message>
+    permission: vbbridge.use
+
+permissions:
+  vbbridge.use:
+    description: Allows triggering a network-wide broadcast
+    default: op

@@ -1,0 +1,8 @@
+{
+  "id": "vbbridge",
+  "name": "VBBridge",
+  "version": "1.0.0",
+  "description": "Relays a backend command to VelocityBroadcast's /vb on the proxy.",
+  "authors": ["dpembo"],
+  "main": "uk.globeworks.vbbridge.velocity.VBBridgeVelocityPlugin"
+}
