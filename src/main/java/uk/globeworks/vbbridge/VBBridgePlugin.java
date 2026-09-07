@@ -28,11 +28,11 @@ public class VBBridgePlugin extends JavaPlugin implements CommandExecutor {
             self.setExecutor(this);
         }
         String logo = "\n" +
-        GREEN + "_______ _____   " + BLUE + "_______ " + GREEN + "______ " + BLUE + "_______\n" +
+        GREEN + " _______ _____   " + BLUE + "_______ " + GREEN + "______ " + BLUE + "_______\n" +
         GREEN + "|     __|     |_|" + BLUE + "       |" + GREEN + "   __ \\" + BLUE + "    ___|\n" +
         GREEN + "|    |  |       |" + BLUE + "   -   |" + GREEN + "   __ <" + BLUE + "    ___|\n" +
         BROWN + "|_______|_______|" + BLUE + "_______|" + BROWN + "______/" + BLUE + "_______\n" +
-        RED + "________ _______ ______ __  __ _______\n" +
+        RED + " ________ _______ ______ __  __ _______\n" +
         RED + "|  |  |  |       |   __ \\  |/  |     __|\n" +
         RED + "|  |  |  |   -   |      <     <|__     |\n" +
         RED + "|________|_______|___|__|__|\\__|_______|\n" +
