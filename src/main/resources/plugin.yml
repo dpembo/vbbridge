@@ -1,5 +1,5 @@
 name: VBBridge
-version: '1.0.0'
+version: '1.0.1'
 main: uk.globeworks.vbbridge.VBBridgePlugin
 api-version: '1.21'
 author: dpembo
@@ -10,8 +10,21 @@ commands:
     description: Broadcast a message network-wide via VelocityBroadcast
     usage: /netbroadcast <message>
     permission: vbbridge.use
+  vbbridge:
+    description: VBBridge admin commands (debug, reload, handshake)
+    usage: /vbbridge <debug|reload|handshake|version> [args]
+    permission: vbbridge.debug
 
 permissions:
   vbbridge.use:
     description: Allows triggering a network-wide broadcast
+    default: op
+  vbbridge.debug:
+    description: Allows toggling debug logging
+    default: op
+  vbbridge.reload:
+    description: Allows reloading the VBBridge config
+    default: op
+  vbbridge.handshake:
+    description: Allows running a manual version handshake with the proxy
     default: op

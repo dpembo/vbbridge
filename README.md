@@ -12,7 +12,8 @@ It is designed to work with [VelocityBroadcast](https://github.com/dpembo/veloci
 * Relays the message to the Velocity proxy via the `globeworks:vb` plugin channel
 * Works even when the command is run from console (uses any online player as a carrier for the plugin message)
 * Permission-controlled
-* Zero configuration required
+* Optional debug logging (off by default) to avoid log spam on empty servers
+* Version handshake between Paper and Velocity — warns if the two sides run different jar versions
 * Supports Paper 1.21+ and Velocity 3.4+
 
 ## Requirements
@@ -38,14 +39,18 @@ It is designed to work with [VelocityBroadcast](https://github.com/dpembo/veloci
    * Every backend Paper server `plugins/` folder
 3. Restart the proxy and all backend servers.
 4. Ensure your proxy has a plugin that handles the `/vb` command (VelocityBroadcast or equivalent).
+5. (Optional) Edit `plugins/VBBridge/config.yml` on each backend if you want debug logging on by default.
 
-No configuration files are generated or required.
+A `config.yml` is generated on first run with `debug: false`.
 
 ## Commands
 
 |Command|Description|Permission|Default|
 |-|-|-|-|
 |`/netbroadcast <message>`|Broadcasts the message network-wide via the proxy|`vbbridge.use`|`op`|
+|`/vbbridge debug [on\|off\|toggle\|status]`|Toggle debug logging for relay failures/successes|`vbbridge.debug`|`op`|
+|`/vbbridge reload`|Reload config from disk|`vbbridge.reload`|`op`|
+|`/vbbridge handshake`|Manually re-run version HELLO with the proxy (aliases: `version`, `hello`, `ping`)|`vbbridge.handshake` or `vbbridge.debug`|`op`|
 
 **Example:**
 
@@ -59,24 +64,42 @@ This will cause the proxy to run:
 /vb Welcome to the network!
 ```
 
+When **debug** is off (default), a broadcast attempted with no players online is silently skipped — no warning in the log and no message to the sender. This avoids flooding logs during quiet periods (e.g. scheduled crate rewards on an empty server). With debug on, the previous warning and feedback are shown, plus a log line on successful relays.
+
 ## Permissions
 
 |Permission|Description|Default|
 |-|-|-|
 |`vbbridge.use`|Allows use of `/netbroadcast`|`op`|
+|`vbbridge.debug`|Allows toggling debug logging|`op`|
+|`vbbridge.reload`|Allows reloading config|`op`|
+|`vbbridge.handshake`|Allows `/vbbridge handshake` to re-check Paper ↔ Velocity versions|`op`|
 
 ## How it works
 
 1. On the **backend** (Paper):
 
-   * The plugin registers the outgoing channel `globeworks:vb`.
+   * The plugin registers the outgoing/incoming channel `globeworks:vb`.
    * `/netbroadcast` packs the message into a plugin message and sends it through a connected player (or any online player if run from console).
 2. On the **proxy** (Velocity):
 
    * The plugin listens for messages on `globeworks:vb`.
-   * When a message arrives it executes `/vb <message>` as the console.
+   * When a broadcast message arrives it executes `/vb <message>` as the console.
 
 This allows backend plugins, crates, reward systems, etc. to trigger global broadcasts without needing direct proxy access.
+
+### Version handshake
+
+Plugin messaging needs a player connection, so a pure “on enable with zero players” check is not possible. Instead:
+
+* When a player connects to a backend, **Velocity** sends a `HELLO` packet with its version to that server.
+* When a player joins (or the first broadcast is sent), **Paper** sends a `HELLO` with its version to the proxy.
+
+If the versions differ, both sides log a **warning once** (e.g. `VBBridge version mismatch! …`). Keep the **same jar** on proxy and all backends.
+
+After updating only one side, run **`/vbbridge handshake`** on the Paper server (needs at least one player online). That forces a new HELLO, the proxy replies with its version, and you get an in-game match/mismatch message (5s timeout if the proxy never answers).
+
+Broadcast packets use a `BROADCAST` type prefix; older single-string messages are still accepted on the proxy for compatibility.
 
 ## Building from Source
 

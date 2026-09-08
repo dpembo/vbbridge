@@ -1,0 +1,5 @@
+# When true, log failures (e.g. no player online to carry a plugin message)
+# and successful relays. Leave false on production to avoid log spam during
+# quiet periods when scheduled broadcasts run on empty servers.
+# Toggle in-game with /vbbridge debug [on|off|toggle]
+debug: false
